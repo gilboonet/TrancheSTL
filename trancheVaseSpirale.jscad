@@ -1,7 +1,7 @@
 volume = function () {
 	var thing = thingTwisted(params.rayon, params.hautVase, params.rot);
 	return thing.subtract(cylinder({r:params.largVerre, h:params.hautVase}).translate([0,0,0.2]));
-}
+};
 
 function thingTwisted(radius, height, twistangle) {
   twistangle = twistangle || 0;
@@ -12,13 +12,13 @@ function thingTwisted(radius, height, twistangle) {
 		cag.getOutlinePaths()[0].points);
 	
   var thing = flatBottom.solidFromSlices({
-	numslices: height
+	numslices: params.nbPas+1
 	,callback: function(t) {
 		var coef = 1 - t;
 		if (coef < 0.01) coef = 0.01;//must not collapse polygon
 		var h = height * t;
 
-		var c = cag.rotate([0,0,0], [0,0, (twistangle <0) ? -1 : 1], Math.abs(twistangle) * t).scale((3-t)/2);
+		var c = cag.rotate([0,0,0], [0,0, (twistangle <0) ? -1 : 1], Math.abs(twistangle) * t).scale((params.diffHB -t)/2);
 			
 
 		return CSG.Polygon.createFromPoints(
@@ -31,12 +31,14 @@ function thingTwisted(radius, height, twistangle) {
 
 function getParameterDefinitions() {
   return [
-	 { name: 't2',		type:'group',	caption: "Vase"}
+	 { name: 't2',		type: 'group',	caption: "Vase"}
 	,{ name: 'nbC',		type: 'float',	initial: 5,		caption: "Nb. Côtés:" }
 	,{ name: 'rayon',	type: 'float',	initial: 10,	caption: "Rayon:" }
 	,{ name: 'hautVase',type: 'float',	initial: 5,		caption: "Hauteur du vase:"}
 	,{ name: 'rot',		type: 'float',	initial: 45,	caption: "Rotation (°):" }
- 	,{ name: 'largVerre',type: 'float',	initial: 0.5,	caption: "Largeur du verre(0-1):" }
+ 	,{ name: 'largVerre',type:'float',	initial: 0.5,	caption: "Largeur du verre(0-1):" }
+ 	,{ name: 'nbPas',   type: 'float',  initial: 4,     caption: "Nb. de pas" }
+ 	,{ name: 'diffHB',  type: 'float',  initial:3,      caption: "Différence largeur:" }
  	
  	,{ name: 't1',		type:'group',	caption: "Tranchage"}
 	,{ name: 'hauteur',	type: 'float', 	initial: 20,	caption: "Hauteur du volume (cm):" }
